@@ -1,16 +1,45 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CarAd } from '../car-ad.model';
+import { Subscription } from 'rxjs';
+import { CarAdsService } from '../services/car-ads';
 
 @Component({
-  selector: 'app-dashboard',
-  imports: [],
+  selector: 'dashboard', // Keep your naming convention
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
-export class Dashboard {
-  carAds: CarAd[] = [
-    { id: 1, make: 'Toyota', model: 'Corolla', year: 2018, price: 15000, fuel: 'gasoline', doors: 4, mileage: 195000, imageUrl: "" , description: 'Reliable sedan' },
-    { id: 3, make: 'Tesla', model: 'Model 3', year: 2020, price: 35000, fuel: 'electric', doors: 4, mileage: 15000, imageUrl: "" , description: 'Innovative electric car' },
-    { id: 2, make: 'Ford', model: 'Focus', year: 2016, price: 12000, fuel: 'diesel', doors: 4, mileage: 234500, imageUrl: "" , description: 'Comfortable family car' }
-  ];
+export class Dashboard implements OnInit, OnDestroy {
+  carAds: CarAd[] = [];
+  loading = true;
+  error: string | null = null;
+  private subscription: Subscription = new Subscription();
+
+  constructor(private carAdsService: CarAdsService) { }
+
+  ngOnInit(): void {
+    this.loadCarAds();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  public loadCarAds(): void {
+    this.loading = true;
+    this.error = null;
+
+    const sub = this.carAdsService.getCarAds().subscribe({
+      next: (ads) => {
+        this.carAds = ads;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error fetching car ads:', err);
+        this.error = 'Failed to load car ads. Please try again later.';
+        this.loading = false;
+      }
+    });
+
+    this.subscription.add(sub);
+  }
 }

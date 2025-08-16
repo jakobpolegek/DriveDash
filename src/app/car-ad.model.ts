@@ -2,7 +2,7 @@ export interface CarAd {
   id: number;
   make: string;
   model: string;
-  fuel: 'gasoline' | 'diesel' | 'electric' | 'hybrid';
+  fuel: 'Gasoline' | 'Diesel' | 'Electric' | 'Hybrid';
   doors: number;
   mileage: number;
   year: number;
