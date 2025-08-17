@@ -1,13 +1,18 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {Dashboard} from './dashboard/dashboard';
+import {ClerkService} from 'ngx-clerk';
+import {environment} from '../environments/environment';
+import {Header} from './header/header';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Dashboard],
+  imports: [RouterOutlet, Header],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('drivedash');
+  constructor(private clerkService: ClerkService) {
+    this.clerkService.__init({ publishableKey: environment.clerkPublicKey });
+    this.clerkService.clerk$.subscribe();
+  }
 }

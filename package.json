@@ -29,7 +29,9 @@
     "@angular/platform-server": "^20.1.0",
     "@angular/router": "^20.1.0",
     "@angular/ssr": "^20.1.5",
+    "@clerk/clerk-js": "^5.85.0",
     "express": "^5.1.0",
+    "ngx-clerk": "^0.2.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
@@ -42,8 +44,6 @@
     "@types/jasmine": "~5.1.0",
     "@types/node": "^20.17.19",
     "autoprefixer": "^10.4.21",
-    "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.4",
     "jasmine-core": "~5.8.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
@@ -54,5 +54,8 @@
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.12",
     "typescript": "~5.8.2"
+  },
+  "resolutions": {
+    "@clerk/types": "4.5.0"
   }
 }

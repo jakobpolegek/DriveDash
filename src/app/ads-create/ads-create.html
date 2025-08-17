@@ -1,0 +1,20 @@
+<h2>Create New Car Ad</h2>
+<form (ngSubmit)="createAd()">
+  <label>Make: <input [(ngModel)]="ad.make" name="make" required /></label><br />
+  <label>Model: <input [(ngModel)]="ad.model" name="model" required /></label><br />
+  <label>Fuel:
+    <select [(ngModel)]="ad.fuel" name="fuel" required>
+      <option value="gasoline">Gasoline</option>
+      <option value="diesel">Diesel</option>
+      <option value="electric">Electric</option>
+      <option value="hybrid">Hybrid</option>
+    </select>
+  </label><br />
+  <label>Doors: <input type="number" [(ngModel)]="ad.doors" name="doors" required /></label><br />
+  <label>Mileage: <input type="number" [(ngModel)]="ad.mileage" name="mileage" required /></label><br />
+  <label>Year: <input type="number" [(ngModel)]="ad.year" name="year" required /></label><br />
+  <label>Price: <input type="number" [(ngModel)]="ad.price" name="price" required /></label><br />
+  <label>Image URL: <input [(ngModel)]="ad.imageUrl" name="imageUrl" required /></label><br />
+  <label>Description: <textarea [(ngModel)]="ad.description" name="description"></textarea></label><br />
+  <button type="submit">Create Ad</button>
+</form>

@@ -1,0 +1,8 @@
+<div class="mr-4 mt-4">
+  @if ((clerk.user$ | async)) {
+    Welcome {{ user?.firstName }}!
+    <clerk-user-button class="w-20 h-40"/>
+  } @else {
+    <button (click)="openSignIn()">Sign In</button>
+  }
+</div>

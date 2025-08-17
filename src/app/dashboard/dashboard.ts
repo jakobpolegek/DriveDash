@@ -1,10 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CarAd } from '../car-ad.model';
 import { Subscription } from 'rxjs';
 import { CarAdsService } from '../services/car-ads';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
-  selector: 'dashboard', // Keep your naming convention
+  selector: 'dashboard',
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -14,9 +16,21 @@ export class Dashboard implements OnInit, OnDestroy {
   error: string | null = null;
   private subscription: Subscription = new Subscription();
 
-  constructor(private carAdsService: CarAdsService) { }
+  constructor(
+    private carAdsService: CarAdsService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
+    this.subscription.add(
+      this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd && event.url === '/')
+      ).subscribe(() => {
+        this.loadCarAds();
+      })
+    );
+
     this.loadCarAds();
   }
 
@@ -32,11 +46,13 @@ export class Dashboard implements OnInit, OnDestroy {
       next: (ads) => {
         this.carAds = ads;
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Error fetching car ads:', err);
         this.error = 'Failed to load car ads. Please try again later.';
         this.loading = false;
+        this.cdr.detectChanges();
       }
     });
 
