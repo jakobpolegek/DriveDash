@@ -27,6 +27,9 @@ export class Dashboard implements OnInit, OnDestroy {
       this.router.events.pipe(
         filter(event => event instanceof NavigationEnd && event.url === '/')
       ).subscribe(() => {
+        if (this.carAdsService['transferState'].hasKey(this.carAdsService['CAR_ADS_KEY'])) {
+          this.carAdsService['transferState'].remove(this.carAdsService['CAR_ADS_KEY']);
+        }
         this.loadCarAds();
       })
     );

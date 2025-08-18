@@ -2,7 +2,7 @@
   <div class="flex justify-between items-center px-6">
     <h1 class="text-3xl font-bold my-6 hover:cursor-pointer" (click)="navigateToDashboard()">DriveDash</h1>
     @if ((clerk.user$ | async)) {
-      <a routerLink="/create-ad" class="rounded-full bg-blue-500 text-white w-10 h-10 flex items-center justify-center text-2xl hover:bg-blue-600">+</a>
+      <a routerLink="/create-ad" class="rounded-full bg-gray-400 text-white w-10 h-10 flex items-center justify-center text-2xl hover:bg-gray-500">+</a>
     }
     <app-sign-in></app-sign-in>
   </div>

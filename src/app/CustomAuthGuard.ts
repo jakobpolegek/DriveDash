@@ -24,10 +24,8 @@ export class CustomAuthGuard implements CanActivate {
       take(1),
       map(user => {
         if (user) {
-          console.log('Guard: User authenticated, allowing access');
           return true;
         } else {
-          console.log('Guard: User not authenticated, redirecting to /');
           return this.router.parseUrl('');
         }
       })

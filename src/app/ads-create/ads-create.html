@@ -1,20 +1,52 @@
-<h2>Create New Car Ad</h2>
-<form (ngSubmit)="createAd()">
-  <label>Make: <input [(ngModel)]="ad.make" name="make" required /></label><br />
-  <label>Model: <input [(ngModel)]="ad.model" name="model" required /></label><br />
-  <label>Fuel:
-    <select [(ngModel)]="ad.fuel" name="fuel" required>
-      <option value="gasoline">Gasoline</option>
-      <option value="diesel">Diesel</option>
-      <option value="electric">Electric</option>
-      <option value="hybrid">Hybrid</option>
-    </select>
-  </label><br />
-  <label>Doors: <input type="number" [(ngModel)]="ad.doors" name="doors" required /></label><br />
-  <label>Mileage: <input type="number" [(ngModel)]="ad.mileage" name="mileage" required /></label><br />
-  <label>Year: <input type="number" [(ngModel)]="ad.year" name="year" required /></label><br />
-  <label>Price: <input type="number" [(ngModel)]="ad.price" name="price" required /></label><br />
-  <label>Image URL: <input [(ngModel)]="ad.imageUrl" name="imageUrl" required /></label><br />
-  <label>Description: <textarea [(ngModel)]="ad.description" name="description"></textarea></label><br />
-  <button type="submit">Create Ad</button>
-</form>
+<div class="p-6 max-w-4xl mx-auto mt-20">
+  <h2 class="text-2xl font-bold mb-6 text-gray-900">Create New Car Ad</h2>
+  <form (ngSubmit)="createAd()" class="bg-white border rounded-lg p-6 shadow hover:shadow-lg transition-shadow duration-200">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+      <label class="flex flex-col">
+        <span class="text-gray-700 mb-1 font-semibold">Make</span>
+        <input [(ngModel)]="ad.make" name="make" required class="border rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </label>
+      <label class="flex flex-col">
+        <span class="text-gray-700 mb-1 font-semibold">Model</span>
+        <input [(ngModel)]="ad.model" name="model" required class="border rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </label>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+      <label class="flex flex-col">
+        <span class="text-gray-700 mb-1 font-semibold">Fuel</span>
+        <select [(ngModel)]="ad.fuel" name="fuel" required class="border rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="gasoline">Gasoline</option>
+          <option value="diesel">Diesel</option>
+          <option value="electric">Electric</option>
+          <option value="hybrid">Hybrid</option>
+        </select>
+      </label>
+      <label class="flex flex-col">
+        <span class="text-gray-700 mb-1 font-semibold">Doors</span>
+        <input type="number" [(ngModel)]="ad.doors" name="doors" required class="border rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </label>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+      <label class="flex flex-col">
+        <span class="text-gray-700 mb-1 font-semibold">Mileage</span>
+        <input type="number" [(ngModel)]="ad.mileage" name="mileage" required class="border rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </label>
+      <label class="flex flex-col">
+        <span class="text-gray-700 mb-1 font-semibold">Year</span>
+        <input type="number" [(ngModel)]="ad.year" name="year" required class="border rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </label>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+      <label class="flex flex-col">
+        <span class="text-gray-700 mb-1 font-semibold">Price</span>
+        <input type="number" [(ngModel)]="ad.price" name="price" required class="border rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </label>
+    </div>
+    <label class="flex flex-col mb-4">
+      <span class="text-gray-700 mb-1 font-semibold">Description</span>
+      <textarea [(ngModel)]="ad.description" name="description" class="border rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 h-24"></textarea>
+    </label>
+    <button type="submit" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 transition-colors duration-200">Create Ad</button>
+  </form>
+  <a routerLink="" class="mt-4 inline-block text-blue-500 hover:text-blue-700">Back to Dashboard</a>
+</div>
