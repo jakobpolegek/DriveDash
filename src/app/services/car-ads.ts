@@ -1,11 +1,9 @@
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {catchError, from, Observable, of, switchMap} from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { makeStateKey, TransferState } from '@angular/core';
+import { tap, take } from 'rxjs/operators';
 import { CarAd } from '../car-ad.model';
 import { environment } from '../../environments/environment';
-import { Router } from '@angular/router';
 import { ClerkService } from 'ngx-clerk';
 import {CarAdFilters} from '../car-ad-filters.model';
 
@@ -14,15 +12,10 @@ import {CarAdFilters} from '../car-ad-filters.model';
 })
 export class CarAdsService {
   private apiUrl = environment.apiUrl;
-  private CAR_ADS_KEY = makeStateKey<CarAd[]>('car-ads');
 
   constructor(
     private http: HttpClient,
-    private transferState: TransferState,
-    private router: Router,
-    private clerk: ClerkService,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+    private clerk: ClerkService  ) {}
 
   getCarAds(filters?: CarAdFilters): Observable<CarAd[]> {
     let params = new HttpParams();
@@ -117,45 +110,39 @@ export class CarAdsService {
     );
   }
 
-  createAd(ad: CarAd): void {
-    this.getToken().subscribe(token => {
-      if (!token) {
-        console.error('No token available - redirecting to login');
-        this.router.navigate(['/']);
-        return;
-      }
-
-      this.clerk.user$.subscribe(user => {
-        if (!user?.id) {
-          console.error('No user ID available - user not properly authenticated');
-          alert('Authentication error. Please try logging in again.');
-          this.router.navigate(['/']);
-          return;
+  createAd(ad: CarAd): Observable<any> {
+    return this.getToken().pipe(
+      take(1),
+      switchMap(token => {
+        if (!token) {
+          throw new Error('No authentication token available');
         }
 
-        const adWithAuthor = {
-          ...ad,
-          author_id: user.id
-        };
+        return this.clerk.user$.pipe(
+          take(1),
+          switchMap(user => {
+            if (!user?.id) {
+              throw new Error('User not authenticated or user ID is missing');
+            }
 
-        const headers = new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        });
+            const adWithAuthor = {
+              ...ad,
+              author_id: user.id
+            };
 
-        this.http.post(`${this.apiUrl}/ads`, adWithAuthor, { headers }).subscribe({
-          next: (response) => {
-            this.router.navigate(['/']);
-          },
-          error: (err) => {
-            console.error('Error creating ad - Full error:', err);
-            console.error('Error status:', err.status);
-            console.error('Error message:', err.message);
-            console.error('Error body:', err.error);
-            alert("Failed to create ad. Check console for details.");
-          }
-        });
-      });
-    });
+            const headers = new HttpHeaders({
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            });
+
+            return this.http.post(`${this.apiUrl}/ads`, adWithAuthor, { headers });
+          })
+        );
+      }),
+      catchError(err => {
+        console.error('Error in createAd stream:', err);
+        throw err;
+      })
+    );
   }
 }
