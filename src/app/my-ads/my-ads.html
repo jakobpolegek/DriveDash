@@ -1,0 +1,127 @@
+<div class="p-6 max-w-6xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-900">My Car Ads</h2>
+  </div>
+
+  <div class="bg-gray-50 rounded-lg p-4 mb-6">
+    <div class="flex flex-wrap gap-2 items-center">
+      <span class="text-sm font-medium text-gray-700 mr-2">Sort by:</span>
+      <button
+        (click)="onSortChange('make')"
+        class="px-3 py-1 text-sm rounded-md border transition-colors duration-200"
+        [class.bg-blue-500]="sortBy === 'make'"
+        [class.text-white]="sortBy === 'make'"
+        [class.bg-white]="sortBy !== 'make'"
+        [class.text-gray-700]="sortBy !== 'make'">
+        Make {{getSortIcon('make')}}
+      </button>
+      <button
+        (click)="onSortChange('year')"
+        class="px-3 py-1 text-sm rounded-md border transition-colors duration-200"
+        [class.bg-blue-500]="sortBy === 'year'"
+        [class.text-white]="sortBy === 'year'"
+        [class.bg-white]="sortBy !== 'year'"
+        [class.text-gray-700]="sortBy !== 'year'">
+        Year {{getSortIcon('year')}}
+      </button>
+      <button
+        (click)="onSortChange('price')"
+        class="px-3 py-1 text-sm rounded-md border transition-colors duration-200"
+        [class.bg-blue-500]="sortBy === 'price'"
+        [class.text-white]="sortBy === 'price'"
+        [class.bg-white]="sortBy !== 'price'"
+        [class.text-gray-700]="sortBy !== 'price'">
+        Price {{getSortIcon('price')}}
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="text-center py-8">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      <p class="mt-2 text-gray-600">Loading your ads...</p>
+    </div>
+  }
+
+  @if (error) {
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      <p>{{error}}</p>
+      <button (click)="loadMyAds()" class="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+        Try Again
+      </button>
+    </div>
+  }
+
+  @if (!loading && !error && myAds.length === 0) {
+    <div class="text-center py-8">
+      <p class="text-gray-600 mb-4">You haven't created any car advertisements yet.</p>
+    </div>
+  }
+
+  @if (!loading && !error && myAds.length > 0) {
+    <div class="mb-4 flex justify-between items-center">
+      <p class="text-sm text-gray-600">
+        Showing {{myAds.length}} of {{totalItems}} ad{{totalItems === 1 ? '' : 's'}}
+      </p>
+      <p class="text-sm text-gray-600">
+        Page {{currentPage}} of {{totalPages}}
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+      @for (ad of myAds; track ad.id) {
+        <div class="bg-white border rounded-lg p-4 shadow hover:shadow-lg transition-shadow duration-200">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-xl font-semibold text-gray-900">{{ad.make}} {{ad.model}} ({{ad.year}})</h3>
+            <div class="flex gap-2">
+              <button
+                (click)="router.navigate(['/edit-ad', ad.id])"
+                class="text-blue-600 hover:text-blue-800 text-sm">
+                Edit
+              </button>
+              <button
+                (click)="deleteAd(ad.id!)"
+                class="text-red-600 hover:text-red-800 text-sm">
+                Delete
+              </button>
+            </div>
+          </div>
+          <p class="text-gray-700 mb-1"><strong>Price:</strong> {{formatPrice(ad.price)}}</p>
+          <p class="text-gray-700 mb-1"><strong>Fuel:</strong> {{ad.fuel}}</p>
+          <p class="text-gray-700 mb-1"><strong>Doors:</strong> {{ad.doors}}</p>
+          <p class="text-gray-700 mb-1"><strong>Mileage:</strong> {{ad.mileage | number}} miles</p>
+          <p class="text-gray-600 mt-2 text-sm">{{ad.description}}</p>
+        </div>
+      }
+    </div>
+
+    <div class="flex justify-center items-center gap-2">
+      <button
+        (click)="prevPage()"
+        [disabled]="currentPage === 1"
+        class="px-3 py-2 text-sm border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50">
+        Previous
+      </button>
+
+      <div class="flex gap-1">
+        @for (page of [].constructor(totalPages); track $index; let i = $index) {
+          <button
+            (click)="goToPage(i + 1)"
+            class="px-3 py-2 text-sm border rounded"
+            [class.bg-blue-500]="currentPage === i + 1"
+            [class.text-white]="currentPage === i + 1"
+            [class.hover:bg-gray-50]="currentPage !== i + 1">
+            {{i + 1}}
+          </button>
+        }
+      </div>
+
+      <button
+        (click)="nextPage()"
+        [disabled]="currentPage === totalPages"
+        class="px-3 py-2 text-sm border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50">
+        Next
+      </button>
+    </div>
+  }
+</div>
