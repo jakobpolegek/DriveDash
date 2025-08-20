@@ -15,7 +15,8 @@ export class CarAdsService {
 
   constructor(
     private http: HttpClient,
-    private clerk: ClerkService  ) {}
+    private clerk: ClerkService
+  ) {}
 
   getCarAds(filters?: CarAdFilters): Observable<CarAd[]> {
     let params = new HttpParams();
@@ -141,6 +142,40 @@ export class CarAdsService {
       }),
       catchError(err => {
         console.error('Error in createAd stream:', err);
+        throw err;
+      })
+    );
+  }
+
+  getAdById(id: number): Observable<CarAd> {
+    return this.http.get<CarAd>(`${this.apiUrl}/ads/${id}`);
+  }
+
+  updateAd(id: number, ad: CarAd): Observable<any> {
+    return this.getToken().pipe(
+      take(1),
+      switchMap(token => {
+        if (!token) {
+          throw new Error('No authentication token available');
+        }
+        return this.clerk.user$.pipe(
+          take(1),
+          switchMap(user => {
+            if (!user?.id) {
+              throw new Error('User not authenticated or user ID is missing');
+            }
+
+            const headers = new HttpHeaders({
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            });
+
+            return this.http.put(`${this.apiUrl}/ads/${id}`, ad, { headers });
+          })
+        );
+      }),
+      catchError(err => {
+        console.error('Error in updateAd stream:', err);
         throw err;
       })
     );

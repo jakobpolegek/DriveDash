@@ -7,6 +7,7 @@ import {MyAds} from './my-ads/my-ads';
 export const routes: Routes = [
   { path: '', component: Dashboard },
   { path: 'create-ad', component: AdsCreate, canActivate: [CustomAuthGuard] },
+  { path: 'edit-ad/:id', component: AdsCreate, canActivate: [CustomAuthGuard] },
   { path: 'my-ads', component: MyAds, canActivate: [CustomAuthGuard] },
   { path: '**', redirectTo: '' }
 ];

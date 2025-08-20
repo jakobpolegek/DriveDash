@@ -1,73 +1,84 @@
 <div class="p-6 max-w-2xl mx-auto bg-white rounded-lg shadow-md mt-10">
   <div class="flex justify-between items-center mb-6">
-    <h2 class="text-2xl font-bold text-gray-900">Create a New Car Ad</h2>
-    <a routerLink="/" class="text-blue-600 hover:text-blue-800 transition-colors duration-200">&larr; Back to Dashboard</a>
+    <h2 class="text-2xl font-bold text-gray-900">
+      {{ isEditMode ? 'Edit Your Car Ad' : 'Create a New Car Ad' }}
+    </h2>
+    <a [routerLink]="isEditMode ? '/my-ads' : '/'" class="text-blue-600 hover:text-blue-800 transition-colors duration-200">
+      &larr; {{ isEditMode ? 'Back to My Ads' : 'Back to Dashboard' }}
+    </a>
   </div>
 
-  <form #adForm="ngForm" (ngSubmit)="onFormSubmit()">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 mb-4">
-      <div>
-        <label for="make" class="block text-sm font-semibold text-gray-700">Make</label>
-        <input id="make" name="make" type="text" [(ngModel)]="ad.make" required
-               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-      </div>
-      <div>
-        <label for="model" class="block text-sm font-semibold text-gray-700">Model</label>
-        <input id="model" name="model" type="text" [(ngModel)]="ad.model" required
-               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-      </div>
-      <div>
-        <label for="year" class="block text-sm font-semibold text-gray-700">Year</label>
-        <input id="year" name="year" type="number" [(ngModel)]="ad.year" required min="1900"
-               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-      </div>
-      <div>
-        <label for="price" class="block text-sm font-semibold text-gray-700">Price ($)</label>
-        <input id="price" name="price" type="number" [(ngModel)]="ad.price" required min="0"
-               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-      </div>
-      <div>
-        <label for="fuel" class="block text-sm font-semibold text-gray-700">Fuel Type</label>
-        <select id="fuel" name="fuel" [(ngModel)]="ad.fuel" required
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-          <option value="gasoline">Gasoline</option>
-          <option value="diesel">Diesel</option>
-          <option value="electric">Electric</option>
-          <option value="hybrid">Hybrid</option>
-        </select>
-      </div>
-      <div>
-        <label for="doors" class="block text-sm font-semibold text-gray-700">Doors</label>
-        <input id="doors" name="doors" type="number" [(ngModel)]="ad.doors" required min="2" max="5"
-               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-      </div>
-      <div class="sm:col-span-2">
-        <label for="mileage" class="block text-sm font-semibold text-gray-700">Mileage</label>
-        <input id="mileage" name="mileage" type="number" [(ngModel)]="ad.mileage" required min="0"
-               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
-      </div>
-      <div class="sm:col-span-2">
-        <label for="description" class="block text-sm font-semibold text-gray-700">Description</label>
-        <textarea id="description" name="description" [(ngModel)]="ad.description" rows="4"
-                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Include details like color, condition, and features..."></textarea>
-      </div>
+  @if (isLoading && isEditMode && !ad.make) {
+    <div class="text-center py-12">
+      <div class="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-gray-900"></div>
+      <p class="mt-4 text-gray-600">Loading ad details...</p>
     </div>
-
-    @if (errorMessage) {
-      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
-        <p>{{ errorMessage }}</p>
+  } @else {
+    <form #adForm="ngForm" (ngSubmit)="onFormSubmit()">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 mb-4">
+        <div>
+          <label for="make" class="block text-sm font-semibold text-gray-700">Make</label>
+          <input id="make" name="make" type="text" [(ngModel)]="ad.make" required
+                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+        </div>
+        <div>
+          <label for="model" class="block text-sm font-semibold text-gray-700">Model</label>
+          <input id="model" name="model" type="text" [(ngModel)]="ad.model" required
+                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+        </div>
+        <div>
+          <label for="year" class="block text-sm font-semibold text-gray-700">Year</label>
+          <input id="year" name="year" type="number" [(ngModel)]="ad.year" required min="1900"
+                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+        </div>
+        <div>
+          <label for="price" class="block text-sm font-semibold text-gray-700">Price ($)</label>
+          <input id="price" name="price" type="number" [(ngModel)]="ad.price" required min="0"
+                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+        </div>
+        <div>
+          <label for="fuel" class="block text-sm font-semibold text-gray-700">Fuel Type</label>
+          <select id="fuel" name="fuel" [(ngModel)]="ad.fuel" required
+                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            <option value="gasoline">Gasoline</option>
+            <option value="diesel">Diesel</option>
+            <option value="electric">Electric</option>
+            <option value="hybrid">Hybrid</option>
+          </select>
+        </div>
+        <div>
+          <label for="doors" class="block text-sm font-semibold text-gray-700">Doors</label>
+          <input id="doors" name="doors" type="number" [(ngModel)]="ad.doors" required min="2" max="5"
+                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+        </div>
+        <div class="sm:col-span-2">
+          <label for="mileage" class="block text-sm font-semibold text-gray-700">Mileage</label>
+          <input id="mileage" name="mileage" type="number" [(ngModel)]="ad.mileage" required min="0"
+                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+        </div>
+        <div class="sm:col-span-2">
+          <label for="description" class="block text-sm font-semibold text-gray-700">Description</label>
+          <textarea id="description" name="description" [(ngModel)]="ad.description" rows="4"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Include details like color, condition, and features..."></textarea>
+        </div>
       </div>
-    }
 
-    <div class="flex justify-end mt-6">
-      <button type="submit" [disabled]="!adForm.form.valid || isLoading"
-              class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200">
-        @if (isLoading) {
-          <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-        }
-        <span>{{ isLoading ? 'Creating Ad...' : 'Create Ad' }}</span>
-      </button>
-    </div>
-  </form>
+      @if (errorMessage) {
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+          <p>{{ errorMessage }}</p>
+        </div>
+      }
+
+      <div class="flex justify-end mt-6">
+        <button type="submit" [disabled]="!adForm.form.valid || isLoading"
+                class="w-full sm:w-auto inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200">
+          @if (isLoading) {
+            <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+          }
+          <span>{{ isLoading ? 'Saving...' : (isEditMode ? 'Update Ad' : 'Create Ad') }}</span>
+        </button>
+      </div>
+    </form>
+  }
 </div>

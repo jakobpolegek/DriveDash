@@ -2,14 +2,14 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CarAd } from '../car-ad.model';
 import { Subscription, filter, take } from 'rxjs';
 import { CarAdsService } from '../services/car-ads';
-import { Router } from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { ClerkService } from 'ngx-clerk';
 
 @Component({
   selector: 'app-my-ads',
   templateUrl: './my-ads.html',
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, RouterLink],
   styleUrl: './my-ads.css'
 })
 export class MyAds implements OnInit, OnDestroy {
