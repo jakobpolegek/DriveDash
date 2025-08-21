@@ -108,7 +108,7 @@
   }
 
   @if (!loading && !error && carAds.length > 0) {
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
       @for (car of carAds; track car.id) {
         <div class="bg-white border rounded-lg p-4 shadow hover:shadow-lg transition-shadow duration-200">
           <h2 class="text-xl font-semibold mb-2 text-gray-900">{{car.make}} {{car.model}} ({{car.year}})</h2>
@@ -120,5 +120,34 @@
         </div>
       }
     </div>
+
+      <div class="flex justify-center items-center gap-2 mt-8">
+        <button
+          (click)="prevPage()"
+          [disabled]="currentPage === 1"
+          class="px-4 py-2 text-sm border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50">
+          Previous
+        </button>
+
+        <div class="flex gap-1">
+          @for (page of [].constructor(totalPages); track $index; let i = $index) {
+            <button
+              (click)="goToPage(i + 1)"
+              class="px-4 py-2 text-sm border rounded"
+              [class.bg-gray-600]="currentPage === i + 1"
+              [class.text-white]="currentPage === i + 1"
+              [class.hover:bg-gray-700]="currentPage !== i + 1">
+              {{i + 1}}
+            </button>
+          }
+        </div>
+
+        <button
+          (click)="nextPage()"
+          [disabled]="currentPage === totalPages"
+          class="px-4 py-2 text-sm border rounded disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50">
+          Next
+        </button>
+      </div>
   }
 </div>

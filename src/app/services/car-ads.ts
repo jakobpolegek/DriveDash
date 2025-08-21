@@ -6,6 +6,7 @@ import { CarAd } from '../car-ad.model';
 import { environment } from '../../environments/environment';
 import { ClerkService } from 'ngx-clerk';
 import {CarAdFilters} from '../car-ad-filters.model';
+import {PaginatedResponse} from '../paginated-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class CarAdsService {
     private clerk: ClerkService
   ) {}
 
-  getCarAds(filters?: CarAdFilters): Observable<CarAd[]> {
+  getCarAds(filters?: CarAdFilters & { page?: number, perPage?: number }): Observable<PaginatedResponse<CarAd>> {
     let params = new HttpParams();
 
     if (filters) {
@@ -35,9 +36,15 @@ export class CarAdsService {
       if (filters.filterPriceMax !== undefined) {
         params = params.set('filter_price_max', filters.filterPriceMax.toString());
       }
+      if (filters.page) {
+        params = params.set('page', filters.page.toString());
+      }
+      if (filters.perPage) {
+        params = params.set('per_page', filters.perPage.toString());
+      }
     }
 
-    return this.http.get<CarAd[]>(`${this.apiUrl}/ads`, { params });
+    return this.http.get<PaginatedResponse<CarAd>>(`${this.apiUrl}/ads`, { params });
   }
 
   getUniqueMakes(): Observable<string[]> {

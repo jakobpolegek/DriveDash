@@ -30,6 +30,11 @@ export class Dashboard implements OnInit, OnDestroy {
   sortBy: string = '';
   sortOrder: string = 'asc';
 
+  currentPage = 1;
+  totalPages = 0;
+  totalItems = 0;
+  perPage = 10;
+
   constructor(
     private carAdsService: CarAdsService,
     private router: Router,
@@ -60,12 +65,18 @@ export class Dashboard implements OnInit, OnDestroy {
       sortOrder: this.sortOrder || undefined,
       filterMake: this.filterMake || undefined,
       filterPriceMin: this.filterPriceMin || undefined,
-      filterPriceMax: this.filterPriceMax || undefined
+      filterPriceMax: this.filterPriceMax || undefined,
+      page: this.currentPage,
+      perPage: this.perPage
     };
 
     const sub = this.carAdsService.getCarAds(filters).subscribe({
-      next: (ads) => {
-        this.carAds = ads;
+      next: (response) => {
+        this.carAds = response.data;
+        this.currentPage = response.pagination.current_page;
+        this.totalPages = response.pagination.total_pages;
+        this.totalItems = response.pagination.total_items;
+        this.perPage = response.pagination.per_page;
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -101,10 +112,12 @@ export class Dashboard implements OnInit, OnDestroy {
       this.sortBy = field;
       this.sortOrder = 'asc';
     }
+    this.currentPage = 1;
     this.loadCarAds();
   }
 
   onFilterChange(): void {
+    this.currentPage = 1;
     this.loadCarAds();
   }
 
@@ -114,6 +127,7 @@ export class Dashboard implements OnInit, OnDestroy {
     this.filterPriceMax = null;
     this.sortBy = '';
     this.sortOrder = 'asc';
+    this.currentPage = 1;
     this.loadCarAds();
   }
 
@@ -127,5 +141,26 @@ export class Dashboard implements OnInit, OnDestroy {
       style: 'currency',
       currency: 'USD'
     }).format(price);
+  }
+
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.loadCarAds();
+    }
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadCarAds();
+    }
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadCarAds();
+    }
   }
 }
